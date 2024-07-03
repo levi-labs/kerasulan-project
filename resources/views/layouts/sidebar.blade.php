@@ -34,6 +34,12 @@
                 <i class="icon-screen-desktop menu-icon"></i>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('training-data.index') }}">
+                <span class="menu-title">Training Data</span>
+                <i class="icon-screen-desktop menu-icon"></i>
+            </a>
+        </li>
         <li class="nav-item nav-category"><span class="nav-link">Master</span></li>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('recruitments.index') }}">

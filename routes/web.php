@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataTrainingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\TrainingDataController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,18 @@ Route::get('/', function () {
 Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
     Route::get('index', 'index')->name('dashboard.index');
 });
+
+Route::controller(TrainingDataController::class)->prefix('training-data')->group(function () {
+    Route::get('index', 'index')->name('training-data.index');
+    Route::post('import', 'import')->name('training-data.import');
+    Route::get('process', 'process')->name('training-data.process');
+    Route::get('create', 'create')->name('training-data.create');
+    Route::post('store', 'store')->name('training-data.store');
+    Route::get('edit/{trainingData}', 'edit')->name('training-data.edit');
+    Route::put('update/{trainingData}', 'update')->name('training-data.update');
+    Route::delete('destroy/{trainingData}', 'destroy')->name('training-data.destroy');
+});
+
 
 Route::controller(RecruitmentController::class)->prefix('recruitments')->group(function () {
     Route::get('index', 'index')->name('recruitments.index');

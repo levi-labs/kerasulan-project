@@ -9,14 +9,12 @@
         @if (auth()->user()->username)
             <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Selamat Datang {{ auth()->user()->name }}!</h5>
         @endif
-
         <ul class="navbar-nav navbar-nav-right ml-auto">
-
             <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
                 <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown"
                     aria-expanded="false">
                     <img class="img-xs rounded-circle ml-2" src="{{ auth()->user()->getAvatar() }}" alt="Profile image">
-                    <span class="font-weight-normal"> Henry Klein </span></a>
+                    <span class="font-weight-normal"> {{ auth()->user()->username }} </span></a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <div class="dropdown-header text-center">
                         <img class="img-md rounded-circle" src="{{ auth()->user()->getAvatar() }}" alt="Profile image">

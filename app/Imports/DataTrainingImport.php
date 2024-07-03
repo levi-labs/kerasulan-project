@@ -16,12 +16,10 @@ class DataTrainingImport implements ToModel, WithHeadingRow
     {
         return new DataTraining([
             'nama' => $row['nama'],
-            'pecah_suara' => $row['pecah_suara'],
-            'audio_video' => $row['audio_video'],
+            'membaca_not_angka' => $row['membaca_not_angka'],
+            'mengoperasikan_software' => $row['mengoperasikan_software'],
+            'mengoperasikan_audio' => $row['mengoperasikan_audio'],
             'bidang' => $row['bidang'],
-            'y_target' => $row['bidang'] == 'Choir' ? 1 : 0,
-
-
         ]);
     }
 }

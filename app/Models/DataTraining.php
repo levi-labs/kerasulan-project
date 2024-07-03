@@ -9,7 +9,7 @@ class DataTraining extends Model
 {
     use HasFactory;
 
-    protected $table = 'data_training';
+    protected $table = 'training_data';
 
-    protected $fillable = ['nama', 'pecah_suara', 'audio_video', 'bidang', 'y_target'];
+    protected $guarded = ['id'];
 }

@@ -19,12 +19,12 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('data-training.import') }}" method="POST" autocomplete="off"
+                    <form action="{{ route('training-data.import') }}" method="POST" autocomplete="off"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row justify-content-between">
                             <div class="col-md-2">
-                                <a href="{{ route('data-training.process') }}"
+                                <a href="{{ route('training-data.process') }}"
                                     class="btn btn-dark btn-sm float-left">Proses</a>
                             </div>
                             <div class="input-group col-md-3">
@@ -57,9 +57,10 @@
                                 <tr>
                                     <td> {{ $dt->id }} </td>
                                     <td> {{ $dt->nama }} </td>
-                                    <td> {{ $dt->pecah_suara }} </td>
-                                    <td> {{ $dt->audio_video }} </td>
-                                    <td> {{ $dt->bidang }} </td>
+                                    <td> {{ $dt->membaca_not_angka }} </td>
+                                    <td> {{ $dt->mengoperasikan_software }} </td>
+                                    <td> {{ $dt->mengoperasikan_audio }} </td>
+                                    <td> {{ $dt->bidang }}</td>
                                     <td>
                                         <a href="{{ route('recruitments.show', $dt->id) }}"
                                             class="btn btn-dark btn-sm">Show</a>
