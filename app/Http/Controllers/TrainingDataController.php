@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataTraining;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -42,6 +43,7 @@ class TrainingDataController extends Controller
     public $w2_soundman = null;
     public $w3_soundman = null;
     public $bias_soundman = null;
+    public $result = [];
 
 
 
@@ -51,7 +53,7 @@ class TrainingDataController extends Controller
 
         $title  = 'Data Training Page';
         $data = DataTraining::all();
-        return view('data-training.index', compact('title', 'data'));
+        return view('training-data.index', compact('title', 'data'));
     }
     public function import(Request $request)
     {
@@ -85,7 +87,101 @@ class TrainingDataController extends Controller
             $result = $this->training($data);
 
 
-            return view('data-training.process', compact('title', 'result'));
+            return view('training-data.process', compact('title', 'result'));
+        } catch (\Throwable $th) {
+            return back()->with('failed', $th->getMessage());
+        }
+    }
+
+    public function checkPredicted(Request $request)
+    {
+        $title = 'Data Training';
+
+        $nama = $request->nama;
+        $x1 = $request->not_angka;
+        $x2 = $request->software;
+        $x3 = $request->audio;
+
+        $data = DB::table('training_data')
+            ->select('nama', 'membaca_not_angka', 'mengoperasikan_software', 'mengoperasikan_audio', 'bidang')
+            ->get()
+            ->toArray();
+
+        $result = $this->training($data);
+
+        $sample = DB::table('predict_data')->latest('id')->first();
+
+        try {
+            $net_choir = $sample->w1_choir * $x1 + $sample->w2_choir * $x2 + $sample->w3_choir * $x3 + $sample->bias_choir;
+            $net_multimedia = $sample->w1_multimedia * $x1 + $sample->w2_multimedia * $x2 + $sample->w3_multimedia * $x3 + $sample->bias_multimedia;
+            $net_soundman = $sample->w1_soundman * $x1 + $sample->w2_soundman * $x2 + $sample->w3_soundman * $x3 + $sample->bias_soundman;
+            $output_choir = $net_choir >= 0 ? 1 : 0;
+            $output_multimedia = $net_multimedia >= 0 ? 1 : 0;
+            $output_soundman = $net_soundman >= 0 ? 1 : 0;
+
+            if ($x1 > $x2 && $x1 > $x3) {
+                $target_choir = 1;
+                $target_multimedia = 0;
+                $target_soundman = 0;
+            } elseif ($x2 > $x1 && $x2 > $x3) {
+                $target_choir = 0;
+                $target_multimedia = 1;
+                $target_soundman = 0;
+            } elseif ($x3 > $x1 && $x3 > $x2) {
+                $target_choir = 0;
+                $target_multimedia = 0;
+                $target_soundman = 1;
+            }
+            $error_choir = $target_choir - $output_choir;
+            $error_multimedia = $target_multimedia - $output_multimedia;
+            $error_soundman = $target_soundman - $output_soundman;
+
+            $w1_choir_baru = $sample->w1_choir + 0.1 * $error_choir * $x1;
+            $w2_choir_baru = $sample->w2_choir + 0.1 * $error_choir * $x2;
+            $w3_choir_baru = $sample->w3_choir + 0.1 * $error_choir * $x3;
+            $w1_multimedia_baru = $sample->w1_multimedia + 0.1 * $error_multimedia * $x1;
+            $w2_multimedia_baru = $sample->w2_multimedia + 0.1 * $error_multimedia * $x2;
+            $w3_multimedia_baru = $sample->w3_multimedia + 0.1 * $error_multimedia * $x3;
+            $w1_soundman_baru = $sample->w1_soundman + 0.1 * $error_soundman * $x1;
+            $w2_soundman_baru = $sample->w2_soundman + 0.1 * $error_soundman * $x2;
+            $w3_soundman_baru = $sample->w3_soundman + 0.1 * $error_soundman * $x3;
+            $bias_choir_baru = $sample->bias_choir + 0.1 * $error_choir;
+            $bias_multimedia_baru = $sample->bias_multimedia + 0.1 * $error_multimedia;
+            $bias_soundman_baru = $sample->bias_soundman + 0.1 * $error_soundman;
+
+            $predicted = [
+                'nama' => $nama,
+                'x1' => $x1,
+                'x2' => $x2,
+                'x3' => $x3,
+                'net_choir' => $net_choir,
+                'net_multimedia' => $net_multimedia,
+                'net_soundman' => $net_soundman,
+                'output_choir' => $output_choir,
+                'output_multimedia' => $output_multimedia,
+                'output_soundman' => $output_soundman,
+                'target_choir' => $target_choir,
+                'target_multimedia' => $target_multimedia,
+                'target_soundman' => $target_soundman,
+                'error_choir' => $error_choir,
+                'error_multimedia' => $error_multimedia,
+                'error_soundman' => $error_soundman,
+                'w1_choir_baru' => $w1_choir_baru,
+                'w2_choir_baru' => $w2_choir_baru,
+                'w3_choir_baru' => $w3_choir_baru,
+                'w1_multimedia_baru' => $w1_multimedia_baru,
+                'w2_multimedia_baru' => $w2_multimedia_baru,
+                'w3_multimedia_baru' => $w3_multimedia_baru,
+                'w1_soundman_baru' => $w1_soundman_baru,
+                'w2_soundman_baru' => $w2_soundman_baru,
+                'w3_soundman_baru' => $w3_soundman_baru,
+                'bias_choir_baru' => $bias_choir_baru,
+                'bias_multimedia_baru' => $bias_multimedia_baru,
+                'bias_soundman_baru' => $bias_soundman_baru
+            ];
+
+            $message = 'Data Sudah diproses';
+            return view('training-data.process', compact('title', 'result', 'predicted', 'message'));
         } catch (\Throwable $th) {
             return back()->with('failed', $th->getMessage());
         }
@@ -98,12 +194,15 @@ class TrainingDataController extends Controller
         $temp = [];
         $iteration = 6;
         $start = 0;
+        DB::table('predict_data')->truncate();
         while ($start < $iteration) {
             foreach ($data as $key => $value) {
                 // if ($this->w1_choir != null  && $this->w1_soundman != null) {
                 //     dd('mantap');
                 // }
                 if ($this->bias_choir === null && $this->bias_multimedia === null && $this->bias_soundman === null) {
+                    $temp[$start][$key]['epoch']             = $start;
+                    $temp[$start][$key]['nama']             = $value->nama;
                     $temp[$start][$key]['choir']            = $value->membaca_not_angka;
                     $temp[$start][$key]['multimedia']       = $value->mengoperasikan_software;
                     $temp[$start][$key]['soundman']         = $value->mengoperasikan_audio;
@@ -172,11 +271,47 @@ class TrainingDataController extends Controller
                     $temp[$start][$key]['bias_baru_choir']      = $this->bias_choir;
                     $temp[$start][$key]['bias_baru_multimedia'] = $this->bias_multimedia;
                     $temp[$start][$key]['bias_baru_soundman']   = $this->bias_soundman;
+
+                    DB::table('predict_data')->insert([
+                        'epoch' => $start,
+                        'nama' => $value->nama,
+                        'x1' => $value->membaca_not_angka,
+                        'x2' => $value->mengoperasikan_software,
+                        'x3' => $value->mengoperasikan_audio,
+                        'net_choir' => $temp[$start][$key]['net_choir'],
+                        'net_multimedia' => $temp[$start][$key]['net_multimedia'],
+                        'net_soundman' => $temp[$start][$key]['net_soundman'],
+                        'output_choir' => $temp[$start][$key]['output_choir'],
+                        'output_multimedia' => $temp[$start][$key]['output_multimedia'],
+                        'output_soundman' => $temp[$start][$key]['output_soundman'],
+                        'target_choir' => $temp[$start][$key]['target_choir'],
+                        'target_multimedia' => $temp[$start][$key]['target_multimedia'],
+                        'target_soundman' => $temp[$start][$key]['target_soundman'],
+                        'error_choir' => $temp[$start][$key]['error_choir'],
+                        'error_multimedia' => $temp[$start][$key]['error_multimedia'],
+                        'error_soundman' => $temp[$start][$key]['error_soundman'],
+                        'w1_choir' => $this->w1_choir,
+                        'w2_choir' => $this->w2_choir,
+                        'w3_choir' => $this->w3_choir,
+                        'w1_multimedia' => $this->w1_multimedia,
+                        'w2_multimedia' => $this->w2_multimedia,
+                        'w3_multimedia' => $this->w3_multimedia,
+                        'w1_soundman' => $this->w1_soundman,
+                        'w2_soundman' => $this->w2_soundman,
+                        'w3_soundman' => $this->w3_soundman,
+                        'bias_choir' => $this->bias_choir,
+                        'bias_multimedia' => $this->bias_multimedia,
+                        'bias_soundman' => $this->bias_soundman,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
                 } elseif ($this->bias_choir !== null && $this->bias_multimedia !== null && $this->bias_soundman !== null) {
 
                     // if ($temp[$start] > 0) {
 
                     // }
+                    $temp[$start][$key]['epoch']                = $start;
+                    $temp[$start][$key]['nama']                 = $value->nama;
                     $temp[$start][$key]['choir']                = $value->membaca_not_angka;
                     $temp[$start][$key]['multimedia']           = $value->mengoperasikan_software;
                     $temp[$start][$key]['soundman']             = $value->mengoperasikan_audio;
@@ -229,6 +364,40 @@ class TrainingDataController extends Controller
                     $temp[$start][$key]['bias_baru_multimedia'] = $this->bias_multimedia;
                     $temp[$start][$key]['bias_baru_soundman']   = $this->bias_soundman;
 
+                    DB::table('predict_data')->insert([
+                        'epoch' => $start,
+                        'nama' =>  $value->nama,
+                        'x1' => $value->membaca_not_angka,
+                        'x2' => $value->mengoperasikan_software,
+                        'x3' => $value->mengoperasikan_audio,
+                        'net_choir' => $temp[$start][$key]['net_choir'],
+                        'net_multimedia' => $temp[$start][$key]['net_multimedia'],
+                        'net_soundman' => $temp[$start][$key]['net_soundman'],
+                        'output_choir' => $temp[$start][$key]['output_choir'],
+                        'output_multimedia' => $temp[$start][$key]['output_multimedia'],
+                        'output_soundman' => $temp[$start][$key]['output_soundman'],
+                        'target_choir' => $temp[$start][$key]['target_choir'],
+                        'target_multimedia' => $temp[$start][$key]['target_multimedia'],
+                        'target_soundman' => $temp[$start][$key]['target_soundman'],
+                        'error_choir' => $temp[$start][$key]['error_choir'],
+                        'error_multimedia' => $temp[$start][$key]['error_multimedia'],
+                        'error_soundman' => $temp[$start][$key]['error_soundman'],
+                        'w1_choir' => $this->w1_choir,
+                        'w2_choir' => $this->w2_choir,
+                        'w3_choir' => $this->w3_choir,
+                        'w1_multimedia' => $this->w1_multimedia,
+                        'w2_multimedia' => $this->w2_multimedia,
+                        'w3_multimedia' => $this->w3_multimedia,
+                        'w1_soundman' => $this->w1_soundman,
+                        'w2_soundman' => $this->w2_soundman,
+                        'w3_soundman' => $this->w3_soundman,
+                        'bias_choir' => $this->bias_choir,
+                        'bias_multimedia' => $this->bias_multimedia,
+                        'bias_soundman' => $this->bias_soundman,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+
 
 
                     // $check_match =  array_filter($temp[$start], function ($value) {
@@ -245,8 +414,9 @@ class TrainingDataController extends Controller
             $start++;
         }
         // dd($check_match);
+        $this->result = $temp;
 
-        dd($temp);
+        return $temp;
     }
 }
 

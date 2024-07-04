@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('predict_data', function (Blueprint $table) {
             $table->id();
             $table->string('epoch');
+            $table->string('nama');
             $table->string('x1');
             $table->string('x2');
             $table->string('x3');
@@ -26,6 +27,9 @@ return new class extends Migration
             $table->string('target_choir');
             $table->string('target_multimedia');
             $table->string('target_soundman');
+            $table->string('error_choir');
+            $table->string('error_multimedia');
+            $table->string('error_soundman');
             $table->string('w1_choir');
             $table->string('w2_choir');
             $table->string('w3_choir');

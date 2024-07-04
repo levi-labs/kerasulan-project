@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('recruitment', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->integer('pecah_suara');
-            $table->integer('audio_video');
-            $table->string('bidang', 32);
+            $table->string('nama', 32);
+            $table->string('membaca_not_angka', 20);
+            $table->string('mengoperasikan_software', 20);
+            $table->string('mengoperasikan_audio', 20);
+
             $table->timestamps();
         });
     }

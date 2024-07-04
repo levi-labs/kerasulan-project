@@ -2,6 +2,75 @@
 
 use Illuminate\Support\Facades\DB;
 
+
+function getPerceptron($data)
+{
+    try {
+
+        $perceptron = [];
+        // dd($data);
+
+        $latest_row =  DB::table('predict_data')->latest('id')->first();
+        // dd($latest_row);
+        $rate = 0.1;
+        foreach ($data as $key => $value) {
+            $perceptron[$key]['nama']           = $value->nama;
+            $perceptron[$key]['x1'] = $value->membaca_not_angka;
+            $perceptron[$key]['x2'] = $value->mengoperasikan_software;
+            $perceptron[$key]['x3'] = $value->mengoperasikan_audio;
+            $perceptron[$key]['net_choir']      = $value->membaca_not_angka * $latest_row->w1_choir + $value->mengoperasikan_software * $latest_row->w2_choir + $value->mengoperasikan_audio * $latest_row->w3_choir + $latest_row->bias_choir;
+            $perceptron[$key]['net_multimedia'] = $value->membaca_not_angka * $latest_row->w1_multimedia + $value->mengoperasikan_software * $latest_row->w2_multimedia + $value->mengoperasikan_audio * $latest_row->w3_multimedia + $latest_row->bias_multimedia;
+            $perceptron[$key]['net_soundman']   = $value->membaca_not_angka * $latest_row->w1_soundman + $value->mengoperasikan_software * $latest_row->w2_soundman + $value->mengoperasikan_audio * $latest_row->w3_soundman + $latest_row->bias_soundman;
+
+
+            $perceptron[$key]['output_choir']       = $perceptron[$key]['net_choir'] >= 0 ? 1 : 0;
+            $perceptron[$key]['output_multimedia']  = $perceptron[$key]['net_multimedia'] >= 0 ? 1 : 0;
+            $perceptron[$key]['output_soundman']    = $perceptron[$key]['net_soundman'] >= 0 ? 1 : 0;
+
+            if ($value->membaca_not_angka > $value->mengoperasikan_software && $value->membaca_not_angka > $value->mengoperasikan_audio) {
+                $perceptron[$key]['target_choir'] = 1;
+                $perceptron[$key]['target_multimedia'] = 0;
+                $perceptron[$key]['target_soundman'] = 0;
+            } elseif ($value->mengoperasikan_software > $value->membaca_not_angka && $value->mengoperasikan_software > $value->mengoperasikan_audio) {
+                $perceptron[$key]['target_choir'] = 0;
+                $perceptron[$key]['target_multimedia'] = 1;
+                $perceptron[$key]['target_soundman'] = 0;
+            } elseif ($value->mengoperasikan_audio > $value->membaca_not_angka && $value->mengoperasikan_audio > $value->mengoperasikan_software) {
+                $perceptron[$key]['target_choir'] = 0;
+                $perceptron[$key]['target_multimedia'] = 0;
+                $perceptron[$key]['target_soundman'] = 1;
+            }
+            $perceptron[$key]['error_choir'] = $perceptron[$key]['target_choir'] - $perceptron[$key]['output_choir'];
+            $perceptron[$key]['error_multimedia'] = $perceptron[$key]['target_multimedia'] - $perceptron[$key]['output_multimedia'];
+            $perceptron[$key]['error_soundman'] = $perceptron[$key]['target_soundman'] - $perceptron[$key]['output_soundman'];
+
+            $perceptron[$key]['w1_choir'] = $latest_row->w1_choir + $rate * $perceptron[$key]['error_choir'] * $value->membaca_not_angka;
+            $perceptron[$key]['w2_choir'] = $latest_row->w2_choir + $rate * $perceptron[$key]['error_choir'] * $value->mengoperasikan_software;
+            $perceptron[$key]['w3_choir'] = $latest_row->w3_choir + $rate * $perceptron[$key]['error_choir'] * $value->mengoperasikan_audio;
+
+
+            $perceptron[$key]['w1_multimedia'] = $latest_row->w1_multimedia + $rate * $perceptron[$key]['error_multimedia'] * $value->membaca_not_angka;
+            $perceptron[$key]['w2_multimedia'] = $latest_row->w2_multimedia + $rate * $perceptron[$key]['error_multimedia'] * $value->mengoperasikan_software;
+            $perceptron[$key]['w3_multimedia'] = $latest_row->w2_multimedia + $rate * $perceptron[$key]['error_multimedia'] * $value->mengoperasikan_audio;
+
+
+            $perceptron[$key]['w1_soundman'] = $latest_row->w1_soundman + $rate * $perceptron[$key]['error_soundman'] * $value->membaca_not_angka;
+            $perceptron[$key]['w2_soundman'] = $latest_row->w2_soundman + $rate * $perceptron[$key]['error_soundman'] * $value->mengoperasikan_software;
+            $perceptron[$key]['w3_soundman'] = $latest_row->w3_soundman + $rate * $perceptron[$key]['error_soundman'] * $value->mengoperasikan_audio;
+
+            $perceptron[$key]['bias_choir'] = $latest_row->bias_choir + $rate * $perceptron[$key]['error_choir'];
+            $perceptron[$key]['bias_multimedia'] = $latest_row->bias_multimedia + $rate * $perceptron[$key]['error_multimedia'];
+            $perceptron[$key]['bias_soundman'] = $latest_row->bias_soundman + $rate * $perceptron[$key]['error_soundman'];
+        }
+
+        return $perceptron;
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
+}
+
+
+
 function getResult($data)
 {
     try {

@@ -1,15 +1,12 @@
 @extends('layouts.master')
 @section('content')
     <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
+        <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="d-inline card-title">{{ $title }}</h4>
-                    @if (DB::table('predicted')->count() == 0)
-                        <p class="d-inline alert-warning"><i class="icon-info"></i> Data Training Belum
-                            dilakukan
-                        </p>
-                    @endif
+                    <h4 class="card-title">{{ $title }}</h4>
+
+
                     @if (session()->has('failed'))
                         <div class="alert alert-danger text-danger font-weight-bold" role="alert">
                             {{ session('failed') }}
@@ -21,30 +18,14 @@
                             {{ session('success') }}
                         </div>
                     @endif
-                    <form action="{{ route('recruitments.import') }}" method="POST" autocomplete="off"
+
+                    <form action="{{ route('training-data.import') }}" method="POST" autocomplete="off"
                         enctype="multipart/form-data">
                         @csrf
-                        <div class="row justify-content-between mt-2">
-                            <div class="col-md-8">
-                                <a href="{{ route('recruitments.create') }}"
-                                    class="btn btn-secondary btn-sm mb-2 text-dark"><i class="icon-plus"></i> Add
-                                    Data</a>
-                                @if (\DB::table('predict_data')->count() > 0 && \DB::table('recruitment')->count() > 0)
-                                    <a href="{{ route('recruitments.process') }}" class="btn btn-dark btn-sm mb-2"><i
-                                            class="icon-check"></i>
-                                        Process
-                                    </a>
-                                @elseif (\DB::table('recruitment')->count() == 0)
-                                    <a href="#" class="btn btn-secondary btn-sm mb-2"><i class="icon-check"></i>
-                                        Process
-                                    </a>
-                                    Data Recruitment Belum ada
-                                @else
-                                    <a href="#" class="btn btn-secondary btn-sm mb-2"><i class="icon-check"></i>
-                                        Process
-                                    </a>
-                                @endif
-
+                        <div class="row justify-content-between">
+                            <div class="col-md-2">
+                                <a href="{{ route('training-data.process') }}" class="btn btn-dark btn-sm float-left"><i
+                                        class="icon-check"></i> Proses</a>
                             </div>
                             <div class="input-group col-md-3">
                                 <input type="file" class="form-control form-control-sm" placeholder="Upload File"
@@ -55,7 +36,13 @@
                             </div>
                         </div>
                     </form>
-                    <table class="table table-bordered">
+
+
+
+
+
+
+                    <table class="table table-bordered mt-4">
                         <thead>
                             <tr>
                                 <th> # </th>
@@ -80,6 +67,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>

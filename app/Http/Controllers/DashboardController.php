@@ -12,8 +12,11 @@ class DashboardController extends Controller
     public function index()
     {
         $title = 'Dashboard Page';
+        $data_training  = \App\Models\DataTraining::count();
+        $recruitment    = \App\Models\Recruitment::count();
+        $user           = \App\Models\User::count();
 
-        return view('dashboard.index', compact('title'));
+        return view('dashboard.index', compact('title', 'data_training', 'recruitment', 'user'));
     }
 
     /**

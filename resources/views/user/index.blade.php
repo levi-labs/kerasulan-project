@@ -5,7 +5,6 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{ $title }}</h4>
-                    <p class="card-description"> Add class <code>.table-bordered</code></p>
                     <a href="{{ route('recruitments.create') }}" class="btn btn-dark btn-sm mb-2"><i class="icon-plus"></i> Add
                         Data</a>
                     <table class="table table-bordered">

@@ -28,21 +28,39 @@
                             </div>
                         </div>
                     </form>
-                    <table class="table table-bordered mt-4">
+                    <table class="table table-bordered table-responsive mt-4">
                         <thead>
                             <tr>
-                                <th> # </th>
+
+                                <th> No </th>
                                 <th> Nama </th>
                                 <th> X1 </th>
                                 <th> X2 </th>
-                                <th> V </th>
-                                <th> Luaran Y </th>
-                                <th> Y </th>
-                                <th> Error </th>
-                                <th> W-1 Baru </th>
-                                <th> W-2 Baru </th>
-                                <th> Delta W-1</th>
-                                <th> Delta W-2 </th>
+                                <th> X3</th>
+                                <th> net <br> choir </th>
+                                <th> net <br> multimedia</th>
+                                <th> net <br> soundman </th>
+                                <th> output<br> choir</th>
+                                <th> output<br> multimedia </th>
+                                <th> output <br>soundman </th>
+                                <th> target<br> choir</th>
+                                <th> target <br>multimedia </th>
+                                <th> target <br>soundman </th>
+                                <th> error<br> choir </th>
+                                <th> error <br>multimedia </th>
+                                <th> error<br> soundman </th>
+                                <th> w1<br>baru<br>choir </th>
+                                <th> w2<br>baru<br>choir </th>
+                                <th> w3<br>baru<br>choir </th>
+                                <th> w1<br>baru<br>multimedia </th>
+                                <th> w2<br>baru<br>multimedia </th>
+                                <th> w3<br>baru<br>multimedia </th>
+                                <th> w1<br>baru<br>soundman </th>
+                                <th> w2<br>baru<br>soundman </th>
+                                <th> w3<br>baru<br>soundman </th>
+                                <th> bias<br>choir </th>
+                                <th> bias<br>multimedia </th>
+                                <th> bias<br>soundman </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,23 +76,74 @@
                             @foreach ($results as $key => $result)
                                 <tr class="{{ $key % 2 == 0 ? 'bg-light' : 'bg-gray' }}">
 
-                                    <td> {{ $loop->iteration }} </td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td> {{ $result['nama'] }} </td>
                                     <td> {{ $result['x1'] }} </td>
                                     <td> {{ $result['x2'] }} </td>
-                                    <td> {{ $result['v'] }} </td>
-                                    @if ($result['y_luaran'] != $result['y_target'])
-                                        <td class="bg-danger-light"> {{ $result['y_luaran'] }} </td>
-                                        <td class="bg-danger-light"> {{ $result['y_target'] }} </td>
+                                    <td> {{ $result['x3'] }} </td>
+                                    <td> {{ $result['net_choir'] }} </td>
+                                    <td>{{ $result['net_multimedia'] }}</td>
+                                    <td>{{ $result['net_soundman'] }}</td>
+                                    @if ($result['output_choir'] == $result['target_choir'])
+                                        <td class="bg-green-light">{{ $result['output_choir'] }}</td>
                                     @else
-                                        <td class="bg-green-light"> {{ $result['y_luaran'] }} </td>
-                                        <td class="bg-green-light"> {{ $result['y_target'] }} </td>
+                                        <td>{{ $result['output_choir'] }}</td>
                                     @endif
-                                    <td> {{ $result['error'] }} </td>
-                                    <td> {{ $result['w1_baru'] }} </td>
-                                    <td> {{ $result['w2_baru'] }} </td>
-                                    <td> {{ $result['delta_w1'] }} </td>
-                                    <td> {{ $result['delta_w2'] }} </td>
+
+                                    @if ($result['output_multimedia'] == $result['target_multimedia'])
+                                        <td class="bg-green-light">{{ $result['output_multimedia'] }}</td>
+                                    @else
+                                        <td>{{ $result['output_multimedia'] }}</td>
+                                    @endif
+                                    @if ($result['output_soundman'] == $result['target_soundman'])
+                                        <td class="bg-green-light">{{ $result['output_soundman'] }}</td>
+                                    @else
+                                        <td>{{ $result['output_soundman'] }}</td>
+                                    @endif
+                                    @if ($result['target_choir'] == $result['output_choir'])
+                                        <td class="bg-green-light">{{ $result['target_choir'] }}</td>
+                                    @else
+                                        <td>{{ $result['target_choir'] }}</td>
+                                    @endif
+                                    @if ($result['target_multimedia'] == $result['output_multimedia'])
+                                        <td class="bg-green-light">{{ $result['target_multimedia'] }}</td>
+                                    @else
+                                        <td>{{ $result['target_multimedia'] }}</td>
+                                    @endif
+                                    @if ($result['target_soundman'] == $result['output_soundman'])
+                                        <td class="bg-green-light">{{ $result['target_soundman'] }}</td>
+                                    @else
+                                        <td>{{ $result['target_soundman'] }}</td>
+                                    @endif
+                                    @if ($result['error_choir'] != 0)
+                                        <td class="bg-danger-light">{{ $result['error_choir'] }}</td>
+                                    @else
+                                        <td>{{ $result['error_choir'] }}</td>
+                                    @endif
+                                    @if ($result['error_multimedia'] != 0)
+                                        <td class="bg-danger-light">{{ $result['error_multimedia'] }}</td>
+                                    @else
+                                        <td>{{ $result['error_multimedia'] }}</td>
+                                    @endif
+
+
+                                    @if ($result['error_soundman'] != 0)
+                                        <td class="bg-danger-light">{{ $result['error_soundman'] }}</td>
+                                    @else
+                                        <td>{{ $result['error_soundman'] }}</td>
+                                    @endif
+                                    <td>{{ $result['w1_choir'] }}</td>
+                                    <td>{{ $result['w2_choir'] }}</td>
+                                    <td>{{ $result['w3_choir'] }}</td>
+                                    <td>{{ $result['w1_multimedia'] }}</td>
+                                    <td>{{ $result['w2_multimedia'] }}</td>
+                                    <td>{{ $result['w3_multimedia'] }}</td>
+                                    <td>{{ $result['w1_soundman'] }}</td>
+                                    <td>{{ $result['w2_soundman'] }}</td>
+                                    <td>{{ $result['w3_soundman'] }}</td>
+                                    <td>{{ $result['bias_choir'] }}</td>
+                                    <td>{{ $result['bias_multimedia'] }}</td>
+                                    <td>{{ $result['bias_soundman'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -83,7 +152,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-2">
+    {{-- <div class="row mb-2">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-body">
@@ -118,8 +187,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
+    </div> --}}
+    {{-- <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-body">
@@ -214,8 +283,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </div> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         const ctx = document.getElementById('myChart');
@@ -240,5 +309,5 @@
             data: data,
 
         });
-    </script>
+    </script> --}}
 @endsection

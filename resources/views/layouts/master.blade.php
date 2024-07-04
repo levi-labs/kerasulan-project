@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.png') }}" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+
+
+
 </head>
 
 <body>

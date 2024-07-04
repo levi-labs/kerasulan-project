@@ -31,6 +31,7 @@ Route::controller(TrainingDataController::class)->prefix('training-data')->group
     Route::get('index', 'index')->name('training-data.index');
     Route::post('import', 'import')->name('training-data.import');
     Route::get('process', 'process')->name('training-data.process');
+    Route::post('predicted', 'checkPredicted')->name('training-data.predicted');
     Route::get('create', 'create')->name('training-data.create');
     Route::post('store', 'store')->name('training-data.store');
     Route::get('edit/{trainingData}', 'edit')->name('training-data.edit');
@@ -42,7 +43,7 @@ Route::controller(TrainingDataController::class)->prefix('training-data')->group
 Route::controller(RecruitmentController::class)->prefix('recruitments')->group(function () {
     Route::get('index', 'index')->name('recruitments.index');
     Route::post('import', 'import')->name('recruitments.import');
-    Route::get('process', 'process')->name('recruitments.process');
+    Route::get('process', 'processs')->name('recruitments.process');
     Route::get('create', 'create')->name('recruitments.create');
     Route::post('store', 'store')->name('recruitments.store');
     Route::get('show/{recruitment}', 'show')->name('recruitments.show');

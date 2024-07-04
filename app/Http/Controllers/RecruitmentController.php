@@ -34,6 +34,8 @@ class RecruitmentController extends Controller
                 Excel::import(new \App\Imports\RecruitmentImport, $file);
                 return back()->with('success', 'Data Berhasil dimport');
             }
+
+            return back()->with('failed', 'File not found');
         } catch (\Exception $e) {
             return back()->with('failed', $e->getMessage());
         }
@@ -79,6 +81,23 @@ class RecruitmentController extends Controller
             return view('recruitment.process', compact('title', 'results', 'matrix', 'akurate', 'precision', 'recall'));
         } catch (\Exception $e) {
             return back()->with('failed', $e->getMessage());
+        }
+    }
+
+
+    public function processs()
+    {
+        $title = 'Recruitment Process';
+
+        try {
+            $data  = DB::table('recruitment')->get();
+
+            $results = getPerceptron($data);
+
+
+            return view('recruitment.process', compact('title', 'results'));
+        } catch (\Exception $th) {
+            return back()->with('failed', $th->getMessage());
         }
     }
 
