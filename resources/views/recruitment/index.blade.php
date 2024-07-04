@@ -63,6 +63,7 @@
                                 <th> Membaca Not Angka </th>
                                 <th> Mengoperasikan Sofware </th>
                                 <th> Mengoperasikan Audio </th>
+                                <th> Option </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,11 +74,22 @@
                                     <td> {{ $dt->membaca_not_angka }} </td>
                                     <td> {{ $dt->mengoperasikan_software }} </td>
                                     <td> {{ $dt->mengoperasikan_audio }} </td>
-                                    <td> {{ $dt->bidang }}</td>
                                     <td>
+                                        <a href="{{ route('recruitments.edit', $dt->id) }}"
+                                            class="btn btn-warning btn-sm text-dark">Edit</a>
+                                        <form action="{{ route('recruitments.destroy', $dt->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger btn-sm text-dark">Delete</button>
+                                        </form>
+
+                                    </td>
+
+                                    {{-- <td>
                                         <a href="{{ route('recruitments.show', $dt->id) }}"
                                             class="btn btn-dark btn-sm">Show</a>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>

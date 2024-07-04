@@ -67,6 +67,8 @@ class TrainingDataController extends Controller
 
                 return back()->with('success', 'Data Berhasil dimport');
             }
+
+            return back()->with('failed', 'File not found');
         } catch (\Exception $e) {
             return back()->with('failed', $e->getMessage());
         }

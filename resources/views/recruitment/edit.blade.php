@@ -7,78 +7,47 @@
                     <h4 class="card-title mb-4">{{ $title }}</h4>
                     @if (session('failed'))
                         <div class="alert alert-danger text-danger font-weight-bold" role="alert">
-                            {{ session('failet') }}
+                            {{ session('failed') }}
                         </div>
                     @endif
-                    <form class="forms-sample" method="POST" action="{{ route('recruitments.store') }}">
+                    <form class="forms-sample" method="POST" action="{{ route('recruitments.update', $recruitment->id) }}">
+                        @method('PUT')
                         @csrf
-                        <div class="form-group">
-                            <label for="nik">NIK</label>
-                            <input type="text" class="form-control" id="nik" name="nik"
-                                placeholder="Nomor Induk Kependudukan">
-                            @error('nik')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+
                         <div class="form-group">
                             <label for="nama_lengkap">Nama Lengkap</label>
                             <input type="text" class="form-control" id="nama_lengkap" placeholder="Nama Lengkap"
-                                name="nama_lengkap">
+                                name="nama_lengkap" value="{{ $recruitment->nama }}">
                             @error('nama_lengkap')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="Email" name="email">
-                            @error('email')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="pekerjaan">Pekerjaan</label>
-                            <input type="text" class="form-control" id="pekerjaan" placeholder="Pekerjaan"
-                                name="pekerjaan">
-                            @error('pekerjaan')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="umur">Umur</label>
-                            <input type="number" class="form-control" id="umur" placeholder="21" name="umur">
-                            @error('umur')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="pendidikan_terakhir">Pendidikan Terakhir</label>
-                            <select class="form-control" id="pendidikan_terakhir" name="pendidikan_terakhir">
-                                <option selected disabled>Pilih Pendidikan Terakhir</option>
-                                <option>SD</option>
-                                <option>SMP</option>
-                                <option>SMA/SLTA</option>
-                                <option>Sarjana</option>
-                            </select>
-                            @error('pendidikan_terakhir')
+                            <label for="not_angka">Kemampuan Membaca Not Angka</label>
+                            <input type="number" class="form-control" id="not_angka" placeholder="0" name="not_angka"
+                                min="0" value="{{ $recruitment->membaca_not_angka }}">
+                            @error('not_angka')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="no_telp">No Telp</label>
-                            <input type="text" class="form-control" id="no_telp" placeholder="081299229"
-                                name="no_telp">
-                            @error('no_telp')
+                            <label for="software">Kemampuan Mengoperasikan Software</label>
+                            <input type="number" class="form-control" id="software" placeholder="0" name="software"
+                                min="0" value="{{ $recruitment->mengoperasikan_software }}">
+                            @error('software')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="4"></textarea>
-                            @error('alamat')
+                            <label for="audio">Kemampuan Mengoperasikan Audio</label>
+                            <input type="number" class="form-control" id="software" placeholder="0" name="audio"
+                                min="0" value="{{ $recruitment->mengoperasikan_audio }}">
+                            @error('audio')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
 
                         <button type="submit" class="btn btn-sm btn-dark mr-2">Submit</button>
                         <button class="btn btn-sm btn-light" type="button"

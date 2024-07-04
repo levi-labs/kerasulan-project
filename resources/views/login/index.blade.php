@@ -19,6 +19,11 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}" <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.png') }}" />
 </head>
+<style>
+    .my-color {
+        background-color: rgb(74, 130, 233) !important;
+    }
+</style>
 
 <body>
     <div class="container-scroller">
@@ -27,8 +32,8 @@
                 <div class="row flex-grow">
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left p-5">
-                            <div class="brand-logo">
-                                <img src="{{ asset('assets/images/logo.svg') }}">
+                            <div class="brand-logo text-center">
+                                <img src="{{ asset('assets/logo-gereja.png') }}">
                             </div>
                             <h3 class="text-center">Login Sistem Informasi</h3>
                             <h3 class="text-center">Recruitment</h3>
@@ -54,7 +59,8 @@
                                     @enderror
                                 </div>
                                 <div class="mt-3">
-                                    <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                    <button
+                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn my-color"
                                         type="submit">SIGN IN</button>
                                 </div>
 

@@ -10,6 +10,9 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard.index');
+        }
         return view('login.index');
     }
 
@@ -32,5 +35,11 @@ class LoginController extends Controller
 
             return back()->with('failed', $th->getMessage());
         }
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('login');
     }
 }

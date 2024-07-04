@@ -70,6 +70,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
+                            @if (session()->has('success'))
+                                <div class="alert alert-success text-success font-weight-bold" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="d-sm-flex align-items-baseline report-summary-header">
                                 <h5 class="font-weight-semibold">Dashboard</h5> <span class="ml-auto">Updated
                                     Data</span> <button class="btn btn-icons border-0 p-2"><i

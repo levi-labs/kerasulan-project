@@ -152,6 +152,82 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-bordered mt-4">
+                        <thead>
+                            <tr>
+                                <th> No </th>
+                                <th> Nama </th>
+                                <th> X1 </th>
+                                <th> X2 </th>
+                                <th> X3</th>
+                                <th>Predict</th>
+                                <th>Target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <style>
+                                .bg-green-light {
+                                    background-color: #b3fcbd;
+                                }
+
+                                .bg-danger-light {
+                                    background-color: #fcb3b3;
+                                }
+                            </style>
+                            @foreach ($results as $key => $result)
+                                @php
+                                    $prediksi;
+                                    if (
+                                        $result['output_choir'] > $result['output_multimedia'] &&
+                                        $result['output_choir'] > $result['output_soundman']
+                                    ) {
+                                        $prediksi = 'Choir';
+                                    } elseif (
+                                        $result['output_multimedia'] > $result['output_choir'] &&
+                                        $result['output_multimedia'] > $result['output_soundman']
+                                    ) {
+                                        $prediksi = 'Multimedia';
+                                    } elseif (
+                                        $result['output_soundman'] > $result['output_choir'] &&
+                                        $result['output_soundman'] > $result['output_multimedia']
+                                    ) {
+                                        $prediksi = 'Soundman';
+                                    } else {
+                                        $prediksi = 'Unknown';
+                                    }
+
+                                @endphp
+                                <tr class="{{ $key % 2 == 0 ? 'bg-light' : 'bg-gray' }}">
+
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td> {{ $result['nama'] }} </td>
+                                    <td> {{ $result['x1'] }} </td>
+                                    <td> {{ $result['x2'] }} </td>
+                                    <td> {{ $result['x3'] }} </td>
+
+                                    <td>{{ $prediksi }}</td>
+                                    @if ($result['x1'] > $result['x2'] && $result['x1'] > $result['x3'])
+                                        <td>Choir</td>
+                                    @elseif ($result['x2'] > $result['x1'] && $result['x2'] > $result['x3'])
+                                        <td>Multimedia</td>
+                                    @elseif ($result['x3'] > $result['x1'] && $result['x3'] > $result['x2'])
+                                        <td>Soundman</td>
+                                    @else
+                                        <td>Unknown</td>
+                                    @endif
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     {{-- <div class="row mb-2">
         <div class="col-md-12 col-lg-12">
             <div class="card">

@@ -58,14 +58,17 @@
             </a>
         </li>
 
-        <li class="nav-item nav-category"><span class="nav-link">User Management</span></li>
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}"
-                href="{{ route('users.index') }}">
-                <span class="menu-title">Daftar User</span>
-                <i class="icon-layers menu-icon"></i>
-            </a>
-        </li>
+        @if (auth()->user()->role == 'superadmin')
+            <li class="nav-item nav-category"><span class="nav-link">User Management</span></li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}"
+                    href="{{ route('users.index') }}">
+                    <span class="menu-title">Daftar User</span>
+                    <i class="icon-layers menu-icon"></i>
+                </a>
+            </li>
+        @endif
+
 
 
     </ul>

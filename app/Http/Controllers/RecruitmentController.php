@@ -118,43 +118,25 @@ class RecruitmentController extends Controller
     {
 
         $this->validate($request, [
-            'nik' => 'required',
-            'nama_lengkap' => 'required',
-            'email' => 'required',
-            'pekerjaan' => 'required',
-            'umur' => 'required',
-            'pendidikan_terakhir' => 'required',
-            'no_telp' => 'required',
-            'alamat' => 'required',
+
+            'nama_lengkap'  => 'required',
+            'not_angka'     => 'required',
+            'software'      => 'required',
+            'audio'         => 'required',
         ]);
-        dd($request->all());
-        DB::beginTransaction();
+
+        // DB::beginTransaction();
         try {
-            $recruitment                        = new Recruitment();
-            $recruitment->nik                   = $request->nik;
-            $recruitment->nama_lengkap          = $request->nama_lurator;
-            $recruitment->email                 = $request->email;
-            $recruitment->pekerjaan             = $request->pekerjaan;
-            $recruitment->umur                  = $request->umur;
-            $recruitment->pendidikan_terakhir   = $request->pendidikan_terakhir;
-            $recruitment->no_telp               = $request->no_telp;
-            $recruitment->alamat                = $request->alamat;
-
-
-            $user = new User();
-            $user->name                         = $request->name;
-            $user->email                        = $request->email;
-            $user->password                     = bcrypt($request->email);
-
-            $user->save();
-
-            $recruitment->id_user               = $user->id;
-
+            $recruitment                           = new Recruitment();
+            $recruitment->nama                     = $request->nama_lengkap;
+            $recruitment->membaca_not_angka        = $request->not_angka;
+            $recruitment->mengoperasikan_software  = $request->software;
+            $recruitment->mengoperasikan_audio     = $request->audio;
             $recruitment->save();
-            DB::commit();
-            return redirect()->route('recruitment.index')->with('success', 'Data Berhasil');
+
+            return redirect()->route('recruitments.index')->with('success', 'Data Berhasil ditambahkan');
         } catch (\Exception $e) {
-            DB::rollBack();
+
             return redirect()->back()->with('failed', $e->getMessage());
         }
     }
@@ -175,9 +157,9 @@ class RecruitmentController extends Controller
     public function edit(Recruitment $recruitment)
     {
         $title = 'Recruitment Form Edit';
-        $data = Recruitment::where('id', $recruitment->id)->first();
 
-        return view('recruitment.edit', compact('title', 'data'));
+
+        return view('recruitment.edit', compact('title', 'recruitment'));
     }
 
     /**
@@ -186,42 +168,26 @@ class RecruitmentController extends Controller
     public function update(Request $request, Recruitment $recruitment)
     {
         $this->validate($request, [
-            'nik' => 'required',
+
             'nama_lengkap' => 'required',
-            'email' => 'required',
-            'pekerjaan' => 'required',
-            'umur' => 'required',
-            'pendidikan_terakhir' => 'required',
-            'no_telp' => 'required',
-            'alamat' => 'required',
+            'not_angka' => 'required',
+            'software' => 'required',
+            'audio' => 'required',
         ]);
 
-        DB::beginTransaction();
+
         try {
-            $recruitment                = Recruitment::where('id', $recruitment->id)->first();
-            $recruitment->nik                   = $request->nik;
-            $recruitment->nama_lengkap          = $request->nama_lurator;
-            $recruitment->email                 = $request->email;
-            $recruitment->pekerjaan             = $request->pekerjaan;
-            $recruitment->umur                  = $request->umur;
-            $recruitment->pendidikan_terakhir   = $request->pendidikan_terakhir;
-            $recruitment->no_telp               = $request->no_telp;
-            $recruitment->alamat                = $request->alamat;
-
-            $user = new User();
-            $user->name                         = $request->name;
-            $user->email                        = $request->email;
-            $user->password                     = bcrypt($request->email);
-
-            $user->save();
-
-            $recruitment->id_user               = $user->id;
-
+            $recruitment                               = Recruitment::where('id', $recruitment->id)->first();
+            $recruitment->nama                         = $request->nama_lengkap;
+            $recruitment->membaca_not_angka            = $request->not_angka;
+            $recruitment->mengoperasikan_software      = $request->software;
+            $recruitment->mengoperasikan_audio         = $request->audio;
             $recruitment->save();
-            DB::commit();
-            return redirect()->route('recruitment.index')->with('success', 'Data Berhasil diupdate');
+
+
+            return redirect()->route('recruitments.index')->with('success', 'Data Berhasil diupdate');
         } catch (\Exception $e) {
-            DB::rollBack();
+
             return redirect()->back()->with('failed', $e->getMessage());
         }
     }
@@ -231,14 +197,14 @@ class RecruitmentController extends Controller
      */
     public function destroy(Recruitment $recruitment)
     {
-        DB::beginTransaction();
+
         try {
-            $recruitment = Recruitment::where('id', $recruitment->id)->first();
+
             $recruitment->delete();
-            DB::commit();
-            return redirect()->route('recruitment.index')->with('success', 'Data Berhasil dihapus');
+
+            return redirect()->route('recruitments.index')->with('success', 'Data Berhasil dihapus');
         } catch (\Exception $e) {
-            DB::rollBack();
+
             return redirect()->back()->with('failed', $e->getMessage());
         }
     }
