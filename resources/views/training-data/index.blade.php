@@ -50,6 +50,7 @@
                                 <th> Membaca Not Angka </th>
                                 <th> Mengoperasikan Sofware </th>
                                 <th> Mengoperasikan Audio </th>
+                                <th> Bidang </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,10 +62,10 @@
                                     <td> {{ $dt->mengoperasikan_software }} </td>
                                     <td> {{ $dt->mengoperasikan_audio }} </td>
                                     <td> {{ $dt->bidang }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <a href="{{ route('recruitments.show', $dt->id) }}"
                                             class="btn btn-dark btn-sm">Show</a>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
 
