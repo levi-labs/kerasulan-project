@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -16,7 +17,15 @@ class DashboardController extends Controller
         $recruitment    = \App\Models\Recruitment::count();
         $user           = \App\Models\User::count();
 
-        return view('dashboard.index', compact('title', 'data_training', 'recruitment', 'user'));
+        $chart_training = DB::table('training_data')->groupBy('bidang')->select('bidang', DB::raw('count(*) as count'))->get();
+
+        return view('dashboard.index', compact(
+            'title',
+            'data_training',
+            'recruitment',
+            'user',
+            'chart_training'
+        ));
     }
 
     /**

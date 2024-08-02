@@ -42,9 +42,9 @@
                             <label for="exampleSelectGender">Role</label>
                             <select class="form-control" id="exampleSelectGender" name="role">
                                 <option selected disabled>Pilih Akses Level User</option>
-                                <option {{ $user->role == 'superadmin' ? ' selected' : '' }} value="superadmin">Superadmin
+                                <option {{ $user->role == 'admin' ? ' selected' : '' }} value="admin">Admin
                                 </option>
-                                <option {{ $user->role == 'admin' ? ' selected' : '' }} value="admin">Admin</option>
+                                <option {{ $user->role == 'staf' ? ' selected' : '' }} value="staf">Staf</option>
                             </select>
                             @error('role')
                                 <span class="text-danger">{{ $message }}</span>

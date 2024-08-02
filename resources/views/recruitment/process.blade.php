@@ -178,6 +178,12 @@
                                     background-color: #fcb3b3;
                                 }
                             </style>
+                            @php
+                                $count_choir = 0;
+                                $count_multimedia = 0;
+                                $count_soundman = 0;
+                                $count_unknown = 0;
+                            @endphp
                             @foreach ($results as $key => $result)
                                 @php
                                     $prediksi;
@@ -201,6 +207,7 @@
                                     }
 
                                 @endphp
+
                                 <tr class="{{ $key % 2 == 0 ? 'bg-light' : 'bg-gray' }}">
 
                                     <td>{{ $loop->iteration }}</td>
@@ -211,19 +218,51 @@
 
                                     <td>{{ $prediksi }}</td>
                                     @if ($result['x1'] > $result['x2'] && $result['x1'] > $result['x3'])
+                                        @php
+                                            $count_choir += 1;
+                                        @endphp
                                         <td>Choir</td>
                                     @elseif ($result['x2'] > $result['x1'] && $result['x2'] > $result['x3'])
+                                        @php
+                                            $count_multimedia += 1;
+                                        @endphp
                                         <td>Multimedia</td>
                                     @elseif ($result['x3'] > $result['x1'] && $result['x3'] > $result['x2'])
+                                        @php
+                                            $count_soundman += 1;
+                                        @endphp
                                         <td>Soundman</td>
                                     @else
+                                        @php
+                                            $count_unknown += 1;
+                                        @endphp
                                         <td>Unknown</td>
                                     @endif
 
                                 </tr>
                             @endforeach
+                            @php
+                                $grafik_result = [
+                                    'choir' => $count_choir,
+                                    'multimedia' => $count_multimedia,
+                                    'soundman' => $count_soundman,
+                                    'unknown' => $count_unknown,
+                                ];
+                            @endphp
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Grafik Hasil</h4>
+
+                    <canvas id="myChart" style="width: 600px; height: 100px;"></canvas>
+
                 </div>
             </div>
         </div>
@@ -386,4 +425,28 @@
 
         });
     </script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode(array_keys($grafik_result)) !!},
+                datasets: [{
+                    label: 'Predict',
+                    data: {!! json_encode(array_values($grafik_result)) !!},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

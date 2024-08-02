@@ -128,4 +128,39 @@
             </div>
         </div>
     </div>
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Grafik Data Training</h3>
+                    <canvas id="myChart" style="width: 400px; height: 250px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($chart_training->pluck('bidang')->toArray()) !!},
+                datasets: [{
+                    label: 'Predict',
+                    data: {!! json_encode($chart_training->pluck('count')->toArray()) !!},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

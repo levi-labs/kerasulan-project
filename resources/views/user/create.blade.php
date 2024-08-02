@@ -42,8 +42,8 @@
                             <label for="exampleSelectGender">Role</label>
                             <select class="form-control" id="exampleSelectGender" name="role">
                                 <option selected disabled>Pilih Akses Level User</option>
-                                <option value="superadmin">Superadmin</option>
                                 <option value="admin">Admin</option>
+                                <option value="staf">Staf</option>
                             </select>
                         </div>
                         @error('role')
