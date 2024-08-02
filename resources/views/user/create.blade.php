@@ -43,7 +43,7 @@
                             <select class="form-control" id="exampleSelectGender" name="role">
                                 <option selected disabled>Pilih Akses Level User</option>
                                 <option value="admin">Admin</option>
-                                <option value="staf">Staf</option>
+                                <option value="sekretaris">Sekretaris</option>
                             </select>
                         </div>
                         @error('role')

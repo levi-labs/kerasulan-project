@@ -44,7 +44,8 @@
                                 <option selected disabled>Pilih Akses Level User</option>
                                 <option {{ $user->role == 'admin' ? ' selected' : '' }} value="admin">Admin
                                 </option>
-                                <option {{ $user->role == 'staf' ? ' selected' : '' }} value="staf">Staf</option>
+                                <option {{ $user->role == 'sekretaris' ? ' selected' : '' }} value="sekretaris">Sekretaris
+                                </option>
                             </select>
                             @error('role')
                                 <span class="text-danger">{{ $message }}</span>
